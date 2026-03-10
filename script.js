@@ -11,7 +11,20 @@ function multiply(a, b) {
 }
 
 function divide(a, b) {
-  return a / b;
+  if (b !== 0) {
+    return a / b;
+  } else {
+    divideByZero = true;
+  }
+  return null;
+}
+
+function clear() {
+  firstNum = "";
+  secondNum = "";
+  operator = "";
+  divideByZero = false;
+  resultContainer.textContent = "";
 }
 
 resultContainer = document.getElementById("resultContainer");
@@ -20,16 +33,12 @@ let firstNum = "";
 let secondNum = "";
 let operator = "";
 let currentElement = "";
+let divideByZero = false;
 
 const numberButtons = document.querySelectorAll(".numberButton");
 
 const buttonClear = document.getElementById("buttonClear");
-buttonClear.addEventListener("click", () => {
-  firstNum = "";
-  secondNum = "";
-  operator = "";
-  resultContainer.textContent = "";
-});
+buttonClear.addEventListener("click", clear);
 
 numberButtons.forEach((button) => {
   button.addEventListener("click", () => {
@@ -48,6 +57,9 @@ const operatorButtons = document.querySelectorAll(".operatorButton");
 
 operatorButtons.forEach((button) => {
   button.addEventListener("click", () => {
+    if (!firstNum) {
+      return;
+    }
     if (!operator) {
       resultContainer.textContent = firstNum;
       operator = button.textContent;
@@ -55,9 +67,14 @@ operatorButtons.forEach((button) => {
       currentElement = operator;
     } else if (operator && secondNum) {
       firstNum = operations[operator](Number(firstNum), Number(secondNum));
-      secondNum = "";
-      operator = button.textContent;
-      resultContainer.textContent = `${firstNum} ${operator}`;
+      if (divideByZero) {
+        clear();
+        resultContainer.textContent = "Cannot divide with 0";
+      } else {
+        secondNum = "";
+        operator = button.textContent;
+        resultContainer.textContent = `${firstNum} ${operator}`;
+      }
     }
   });
 });
@@ -72,7 +89,12 @@ const operations = {
 const equalButton = document.getElementById("equalButton");
 equalButton.addEventListener("click", () => {
   firstNum = operations[operator](Number(firstNum), Number(secondNum));
-  secondNum = "";
-  operator = "";
-  resultContainer.textContent = firstNum;
+  if (divideByZero) {
+    clear();
+    resultContainer.textContent = "Cannot divide with 0";
+  } else {
+    secondNum = "";
+    operator = "";
+    resultContainer.textContent = firstNum;
+  }
 });
