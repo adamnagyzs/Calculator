@@ -48,10 +48,17 @@ const operatorButtons = document.querySelectorAll(".operatorButton");
 
 operatorButtons.forEach((button) => {
   button.addEventListener("click", () => {
-    resultContainer.textContent = firstNum;
-    operator = button.textContent;
-    resultContainer.textContent += ` ${operator} `;
-    currentElement = operator;
+    if (!operator) {
+      resultContainer.textContent = firstNum;
+      operator = button.textContent;
+      resultContainer.textContent += ` ${operator} `;
+      currentElement = operator;
+    } else if (operator && secondNum) {
+      firstNum = operations[operator](Number(firstNum), Number(secondNum));
+      secondNum = "";
+      operator = button.textContent;
+      resultContainer.textContent = `${firstNum} ${operator}`;
+    }
   });
 });
 
