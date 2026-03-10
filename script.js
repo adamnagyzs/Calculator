@@ -56,27 +56,24 @@ const operatorButtons = document.querySelectorAll(".operatorButton");
 
 operatorButtons.forEach((button) => {
   button.addEventListener("click", () => {
-    if (!firstNum) {
-      return;
-    }
-    if (!operator) {
-      resultContainer.textContent = firstNum;
-      operator = button.textContent;
-      resultContainer.textContent += ` ${operator} `;
-      currentElement = operator;
-    } else if (operator && !secondNum) {
-      operator = button.textContent;
-    } else if (operator && secondNum) {
-      firstNum = operations[operator](Number(firstNum), Number(secondNum));
+    const clickedOperator = button.textContent;
+
+    if (!firstNum) return;
+
+    if (secondNum) {
+      const result = operations[operator](Number(firstNum), Number(secondNum));
       if (divideByZero) {
         clear();
         resultContainer.textContent = "Cannot divide with 0";
-      } else {
-        secondNum = "";
-        operator = button.textContent;
-        resultContainer.textContent = `${firstNum} ${operator}`;
+        return;
       }
+      firstNum = result;
+      secondNum = "";
     }
+
+    operator = clickedOperator;
+
+    resultContainer.textContent = `${firstNum} ${operator}`;
   });
 });
 
