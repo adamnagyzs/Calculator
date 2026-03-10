@@ -32,7 +32,6 @@ resultContainer = document.getElementById("resultContainer");
 let firstNum = "";
 let secondNum = "";
 let operator = "";
-let currentElement = "";
 let divideByZero = false;
 
 const numberButtons = document.querySelectorAll(".numberButton");
@@ -65,6 +64,8 @@ operatorButtons.forEach((button) => {
       operator = button.textContent;
       resultContainer.textContent += ` ${operator} `;
       currentElement = operator;
+    } else if (operator && !secondNum) {
+      operator = button.textContent;
     } else if (operator && secondNum) {
       firstNum = operations[operator](Number(firstNum), Number(secondNum));
       if (divideByZero) {
