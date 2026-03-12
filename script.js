@@ -36,8 +36,8 @@ let divideByZero = false;
 
 const numberButtons = document.querySelectorAll(".numberButton");
 
-const buttonClear = document.getElementById("buttonClear");
-buttonClear.addEventListener("click", clear);
+const clearButton = document.getElementById("clearButton");
+clearButton.addEventListener("click", clear);
 
 numberButtons.forEach((button) => {
   button.addEventListener("click", () => {
@@ -95,4 +95,25 @@ equalButton.addEventListener("click", () => {
     operator = "";
     resultContainer.textContent = firstNum;
   }
+});
+const dotButton = document.getElementById("dotButton");
+
+dotButton.addEventListener("click", () => {
+  if (!operator) {
+    if (!firstNum.includes(".")) {
+      if (firstNum === "") {
+        firstNum = "0";
+      }
+      firstNum += ".";
+    }
+  } else {
+    if (!secondNum.includes(".")) {
+      if (secondNum === "") {
+        secondNum = "0";
+      }
+      secondNum += ".";
+    }
+  }
+
+  resultContainer.textContent = `${firstNum} ${operator} ${secondNum}`;
 });
