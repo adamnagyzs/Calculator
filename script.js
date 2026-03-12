@@ -27,63 +27,40 @@ function clear() {
   resultContainer.textContent = "";
 }
 
-resultContainer = document.getElementById("resultContainer");
+function pressNumbers(e) {
+  const button = e.target;
 
-let firstNum = "";
-let secondNum = "";
-let operator = "";
-let divideByZero = false;
+  if (!operator) {
+    firstNum += button.textContent;
+  } else {
+    secondNum += button.textContent;
+  }
+  updateDisplay();
+}
 
-const numberButtons = document.querySelectorAll(".numberButton");
+function pressOperators(e) {
+  const button = e.target;
+  const clickedOperator = button.textContent;
 
-const clearButton = document.getElementById("clearButton");
-clearButton.addEventListener("click", clear);
+  if (!firstNum) return;
 
-numberButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    if (!operator) {
-      firstNum += button.textContent;
-    } else {
-      secondNum += button.textContent;
+  if (secondNum) {
+    const result = operations[operator](Number(firstNum), Number(secondNum));
+    if (divideByZero) {
+      clear();
+      resultContainer.textContent = "Cannot divide with 0";
+      return;
     }
-    resultContainer.textContent = `${firstNum} ${operator} ${secondNum}`;
-  });
-});
+    firstNum = result;
+    secondNum = "";
+  }
 
-const operatorButtons = document.querySelectorAll(".operatorButton");
+  operator = clickedOperator;
 
-operatorButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    const clickedOperator = button.textContent;
+  resultContainer.textContent = `${firstNum} ${operator}`;
+}
 
-    if (!firstNum) return;
-
-    if (secondNum) {
-      const result = operations[operator](Number(firstNum), Number(secondNum));
-      if (divideByZero) {
-        clear();
-        resultContainer.textContent = "Cannot divide with 0";
-        return;
-      }
-      firstNum = result;
-      secondNum = "";
-    }
-
-    operator = clickedOperator;
-
-    resultContainer.textContent = `${firstNum} ${operator}`;
-  });
-});
-
-const operations = {
-  "+": add,
-  "-": subtract,
-  x: multiply,
-  "÷": divide,
-};
-
-const equalButton = document.getElementById("equalButton");
-equalButton.addEventListener("click", () => {
+function pressEqual() {
   if (!secondNum) {
     return;
   }
@@ -96,10 +73,9 @@ equalButton.addEventListener("click", () => {
     operator = "";
     resultContainer.textContent = firstNum;
   }
-});
-const dotButton = document.getElementById("dotButton");
+}
 
-dotButton.addEventListener("click", () => {
+function pressDot() {
   if (!operator) {
     if (!firstNum.includes(".")) {
       if (firstNum === "") {
@@ -116,12 +92,10 @@ dotButton.addEventListener("click", () => {
     }
   }
 
-  resultContainer.textContent = `${firstNum} ${operator} ${secondNum}`;
-});
+  updateDisplay();
+}
 
-const delButton = document.getElementById("delButton");
-
-delButton.addEventListener("click", () => {
+function pressDel() {
   if (!operator) {
     firstNum = firstNum.slice(0, -1);
   } else if (operator && !secondNum) {
@@ -130,5 +104,50 @@ delButton.addEventListener("click", () => {
     secondNum = secondNum.slice(0, -1);
   }
 
+  updateDisplay();
+}
+
+function updateDisplay() {
   resultContainer.textContent = `${firstNum} ${operator} ${secondNum}`;
+}
+
+const operations = {
+  "+": add,
+  "-": subtract,
+  x: multiply,
+  "÷": divide,
+};
+
+const resultContainer = document.getElementById("resultContainer");
+
+let firstNum = "";
+let secondNum = "";
+let operator = "";
+let divideByZero = false;
+
+const clearButton = document.getElementById("clearButton");
+clearButton.addEventListener("click", clear);
+
+const numberButtons = document.querySelectorAll(".numberButton");
+numberButtons.forEach((button) => {
+  button.addEventListener("click", pressNumbers);
+});
+
+const operatorButtons = document.querySelectorAll(".operatorButton");
+operatorButtons.forEach((button) => {
+  button.addEventListener("click", pressOperators);
+});
+
+const equalButton = document.getElementById("equalButton");
+equalButton.addEventListener("click", pressEqual);
+
+const dotButton = document.getElementById("dotButton");
+dotButton.addEventListener("click", pressDot);
+
+const delButton = document.getElementById("delButton");
+delButton.addEventListener("click", pressDel);
+
+document.addEventListener("keydown", (e) => {
+  const btn = document.querySelector(`[data-key="${e.key}"]`);
+  if (btn) btn.click();
 });
