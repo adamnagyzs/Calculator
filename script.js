@@ -43,10 +43,8 @@ numberButtons.forEach((button) => {
   button.addEventListener("click", () => {
     if (!operator) {
       firstNum += button.textContent;
-      currentElement = firstNum;
     } else {
       secondNum += button.textContent;
-      currentElement = secondNum;
     }
     resultContainer.textContent = `${firstNum} ${operator} ${secondNum}`;
   });
@@ -113,6 +111,20 @@ dotButton.addEventListener("click", () => {
       }
       secondNum += ".";
     }
+  }
+
+  resultContainer.textContent = `${firstNum} ${operator} ${secondNum}`;
+});
+
+const delButton = document.getElementById("delButton");
+
+delButton.addEventListener("click", () => {
+  if (!operator) {
+    firstNum = firstNum.slice(0, -1);
+  } else if (operator && !secondNum) {
+    operator = "";
+  } else {
+    secondNum = secondNum.slice(0, -1);
   }
 
   resultContainer.textContent = `${firstNum} ${operator} ${secondNum}`;
