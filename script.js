@@ -84,6 +84,9 @@ const operations = {
 
 const equalButton = document.getElementById("equalButton");
 equalButton.addEventListener("click", () => {
+  if (!secondNum) {
+    return;
+  }
   firstNum = operations[operator](Number(firstNum), Number(secondNum));
   if (divideByZero) {
     clear();
